@@ -34,10 +34,13 @@ write.csv2(data,
            MAIN_merged_file,
            row.names = F)
 
-ggplot(data, aes(x=NFob,
+p <- ggplot(data, aes(x=NFob,
                  y=PA,
                  color=Code.FAO))+
   facet_wrap(~Fishing_mode)+
   geom_point()+
   scale_color_brewer("Species",
                      palette = "Set1")
+
+ggsave(file.path(OUTPUT_PATH, "PA_vs_density.png"),
+       p, width = 10, height = 6)
