@@ -37,4 +37,7 @@ write.csv2(data,
 ggplot(data, aes(x=NFob,
                  y=PA,
                  color=Code.FAO))+
-  geom_point()
+  facet_wrap(~Fishing_mode)+
+  geom_point()+
+  scale_color_brewer("Species",
+                     palette = "Set1")
