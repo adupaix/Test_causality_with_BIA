@@ -1,0 +1,10 @@
+.Rhistory
+Outputs
+Docs
+0-Data
+*.Rproj
+.Rproj.user
+config/*
+my_launch.R
+
+!config/config_template.R
