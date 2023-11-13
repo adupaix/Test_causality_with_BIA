@@ -55,6 +55,8 @@ p2 <- ggplot(data %>% dplyr::filter(Fishing_mode == "FAD"),
             aes(x=NFob,
                 y=PA,
                 color=Code.FAO))+
+  facet_wrap(~Code.FAO,
+             ncol = 1)+
   geom_errorbar(aes(ymin = PA - PA_se,
                     ymax = PA + PA_se))+
   geom_errorbarh(aes(xmin = NFob - se_NFob,
@@ -66,4 +68,4 @@ p2 <- ggplot(data %>% dplyr::filter(Fishing_mode == "FAD"),
   ylab("Phase angle (°)")
 
 ggsave(file.path(OUTPUT_PATH, "PA_vs_density_DFAD.png"),
-       p2, width = 10, height = 6)
+       p2, width = 8, height = 10)
