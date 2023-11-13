@@ -53,8 +53,8 @@ fob.null <- function(Ob7){
   # qu on va completer avec celles de fob_type_when_arriving
   Ob7<-cbind(Ob7, obj_conv=Ob7$fob_type_when_leaving)
   
-  data <- Ob7[Ob7$obj_conv == "",]
-  data_rest <- Ob7[Ob7$obj_conv != "",]
+  data <- Ob7[Ob7$obj_conv == "" | is.na(Ob7$obj_conv),]
+  data_rest <- Ob7[Ob7$obj_conv != "" & !is.na(Ob7$obj_conv),]
   
   if (length(levels(data$obj_conv)) != length(levels(Ob7$fob_type_when_arriving))){
     levels(data$obj_conv)<-levels(Ob7$fob_type_when_arriving)
@@ -204,14 +204,12 @@ doubl.obs <- function (Ob7){
 #                                RENCONTRE ALEATOIRE                                    #
 #=======================================================================================#
 # ARGUMENTS:                                                                            #
-# preped_Ob7 (data.frame) : donnees observateur preparee avec prep.obs                  #
+# data (data.frame) : donnees observateur preparee avec prep.obs                  #
 #                                                                                       #
 # return : data.frame avec les observations non aleatoires d objets supprimees          #
 #=======================================================================================#
 
-random.encounter <- function(preped_Ob7){
-  
-  data<-preped_Ob7
+random.encounter <- function(data){
   
   ## 1. Suppression des mise a l eau de FAD ----
   data <- data[data$operation_on_object_code != 1,]
