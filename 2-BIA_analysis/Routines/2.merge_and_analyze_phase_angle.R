@@ -50,3 +50,20 @@ p <- ggplot(data, aes(x=NFob,
 
 ggsave(file.path(OUTPUT_PATH, "PA_vs_density.png"),
        p, width = 10, height = 6)
+
+p2 <- ggplot(data %>% dplyr::filter(Fishing_mode == "FAD"),
+            aes(x=NFob,
+                y=PA,
+                color=Code.FAO))+
+  geom_errorbar(aes(ymin = PA - PA_se,
+                    ymax = PA + PA_se))+
+  geom_errorbarh(aes(xmin = NFob - se_NFob,
+                     xmax = NFob + se_NFob))+
+  geom_point()+
+  scale_color_brewer("Species",
+                     palette = "Set1")+
+  xlab("FOB density (number of FOBs per 2° cell)")+
+  ylab("Phase angle (°)")
+
+ggsave(file.path(OUTPUT_PATH, "PA_vs_density_DFAD.png"),
+       p2, width = 10, height = 6)
