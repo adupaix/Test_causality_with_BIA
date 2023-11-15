@@ -17,6 +17,8 @@
 ###FONCTIONS NECESSAIRES
 source(file.path(FUNC_PATH,'avdth_position_conversion.R'))
 
+BIA_fish_file <- file.path(OUTPUT_PATH,
+                           "Phase_angle_per_fish.csv")
 BIA_main_output_file <- file.path(OUTPUT_PATH,
                                   "MAIN-Phase_angle_per_set.csv")
 MAIN_merged_file <- file.path(MAIN_OUTPUT_PATH,

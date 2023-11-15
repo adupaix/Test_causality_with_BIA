@@ -3,7 +3,7 @@
 #'@update : 2023-10-27
 #'@email : 
 #'#*******************************************************************************************************************
-#'@description :  Get FOB density associated with BIA values of sets
+#'@description :  Merge FOB and phase angle data and perform analysis
 #'#*******************************************************************************************************************
 #'@revisions
 #'
@@ -69,3 +69,45 @@ p2 <- ggplot(data %>% dplyr::filter(Fishing_mode == "FAD"),
 
 ggsave(file.path(OUTPUT_PATH, "PA_vs_density_DFAD.png"),
        p2, width = 8, height = 10)
+
+
+#'**************************************************
+
+data_per_fish <- read.csv2(BIA_fish_file)
+
+data_per_fish %>%
+  dplyr::mutate(Date = as.Date(Date)) %>%
+  dplyr::mutate(x = floor(longitude_dec/RESOLUTION)*RESOLUTION + RESOLUTION/2,
+                y = floor(latitude_dec/RESOLUTION)*RESOLUTION + RESOLUTION/2,
+                year = lubridate::year(Date),
+                timescale = lubridate::month(Date)) -> data_per_fish
+
+if (TIMESCALE == "quarter"){
+  data_per_fish$timescale <- ceiling(data_per_fish$timescale/3)
+}
+
+merge(data_per_fish, FOB_data,
+      by = c("x","y","year","timescale"),
+      all.x = T, all.y = F) -> data_per_fish
+
+
+data_per_fish %>%
+  # count the number of samples per set
+  plyr::ddply(c("set_id", "Code.FAO"), function(x) nrow(x)) %>%
+  dplyr::rename("sample_size" = "V1") %>%
+  dplyr::right_join(data_per_fish, by = c("set_id", "Code.FAO")) %>%
+  # and filter the sets with too few samples (<10)
+  dplyr::filter(sample_size >=10,
+                Fishing_mode == "FAD") %>%
+  ggplot()+
+  geom_boxplot(aes(x = NFob, y = phase_angle_deg,
+                   group = NFob, color = Code.FAO),
+               width = 5)+
+  facet_wrap(~Code.FAO, ncol = 1)+
+  scale_color_brewer("Species",
+                     palette = "Set1")+
+  xlab("FOB density (number of FOBs per 2° cell)")+
+  ylab("Phase angle (°)") -> p3
+
+ggsave(file.path(OUTPUT_PATH, "boxplot_PA_vs_density_DFAD.png"),
+       p3, width = 8, height = 10)

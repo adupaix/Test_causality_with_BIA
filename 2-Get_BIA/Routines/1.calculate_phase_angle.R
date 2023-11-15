@@ -43,6 +43,10 @@ data %>%
                                          Quadrant,longitude,latitude,
                                          sep = "_"))) -> data
 
+write.csv2(data,
+           BIA_fish_file,
+           row.names = F)
+
 # if (PLOT_CHECK){
 #   ggplot(data)+
 #     geom_histogram(aes(x=phase_angle_deg,
