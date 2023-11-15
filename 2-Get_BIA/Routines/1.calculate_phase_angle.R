@@ -30,7 +30,8 @@ data <- avdth_position_conversion(data,
 
 data %>%
   # filter missing positions
-  dplyr::filter(!(is.na(longitude_dec)|is.na(latitude_dec))) %>%
+  dplyr::filter(!(is.na(longitude_dec)|is.na(latitude_dec)),
+                Length >= LENGTH_INTERVAL[1] & Length <= LENGTH_INTERVAL[2]) %>%
   #calculate phase angle
   dplyr::mutate(Reactance = as.numeric(as.character(Reactance)),
                 Resistance = as.numeric(as.character(Resistance)),
