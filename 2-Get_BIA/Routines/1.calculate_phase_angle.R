@@ -127,7 +127,7 @@ ddply(data, c("Code.FAO","set_id"),
   dplyr::filter(!duplicated(paste(set_id,Code.FAO))) %>%
   dplyr::select(set_id:Sample_size, Boat_code:Fishing_mode,
                 Code.FAO, longitude_dec, latitude_dec) %>%
-  dplyr::filter(Sample_size >= 10) -> BIA_data
+  dplyr::filter(Sample_size >= MIN_SAMPLE_SIZE) -> BIA_data
 
 write.csv2(BIA_data,
            BIA_main_output_file,
