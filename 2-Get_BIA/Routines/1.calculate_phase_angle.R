@@ -105,21 +105,26 @@ write.csv2(data,
 #   dplyr::filter(Fishing_mode == FISHING_MODE,
 #                 Code.FAO == SPECIES) -> data_species
 
+# Calculate mean PA per set
 ddply(data, c("Code.FAO","set_id"),
       function(x) mean(x$phase_angle_deg)) %>%
   dplyr::rename("PA" = "V1") %>%
+  # Calculate standard error of PA per set and merge
   dplyr::left_join(
     ddply(data, c("Code.FAO","set_id"),
           function(x) sd(x$phase_angle_deg)/sqrt(nrow(x))),
     by = c("Code.FAO","set_id")) %>%
   dplyr::rename("PA_se" = "V1") %>%
+  # Calculate sample size and merge
   dplyr::left_join(
     ddply(data, c("Code.FAO","set_id"),
           function(x) nrow(x)),
     by = c("Code.FAO","set_id")) %>%
   dplyr::rename("Sample_size" = "V1") %>%
+  #add the 3 new columns to data
   dplyr::left_join(data, by = c("Code.FAO","set_id")) %>%
-  dplyr::filter(!duplicated(set_id)) %>%
+  # keep one value per set and species
+  dplyr::filter(!duplicated(paste(set_id,Code.FAO))) %>%
   dplyr::select(set_id:Sample_size, Boat_code:Fishing_mode,
                 Code.FAO, longitude_dec, latitude_dec) %>%
   dplyr::filter(Sample_size >= 10) -> BIA_data
