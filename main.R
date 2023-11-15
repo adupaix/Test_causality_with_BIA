@@ -31,11 +31,15 @@ toKeep <- c("toKeep", ls())
 
 #' Get FOB number
 #' ***************
-if (CALCULATE_FOB_NUMBER){
-  source(file.path(STUDY_DIR, "1-Get_FOB_number/main_to_get_fob_number.R"))
-}
+source(file.path(STUDY_DIR, "1-Get_FOB_number/main_to_get_fob_number.R"))
 
-if (ANALYZE_BIA){
-  source(file.path(STUDY_DIR, "2-BIA_analysis/main_to_analyze_BIA.R"))
-}
+
+#' Get phase angle values
+#' ********************
+source(file.path(STUDY_DIR, "2-Get_BIA/main_to_get_BIA.R"))
+
+
+#' Get environmental variables values
+#' ***********************************
+source(file.path(STUDY_DIR, "3-Get_enviro/main_to_get_enviro.R"))
 
