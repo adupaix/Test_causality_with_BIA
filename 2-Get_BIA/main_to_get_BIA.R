@@ -11,11 +11,11 @@
 #'#*******************************************************************************************************************
 
 cat('\14')
-cat(crayon::bold("2. Calculation of the Phase Angle and analysis\n"))
+cat(crayon::bold("2. Calculation of the Phase Angle\n"))
 cat(crayon::bold("----------------------------------------------\n"))
 
-WD <- file.path(STUDY_DIR, "2-BIA_analysis")
-OUTPUT_PATH <- file.path(MAIN_OUTPUT_PATH, "2-BIA_analysis_Outputs")
+WD <- file.path(STUDY_DIR, "2-Get_BIA")
+OUTPUT_PATH <- file.path(MAIN_OUTPUT_PATH, "2-Get_BIA_Outputs")
 dir.create(OUTPUT_PATH, showWarnings = F)
 ROUT_PATH <- file.path(WD, "Routines")
 FUNC_PATH <- file.path(WD, "Functions")
@@ -34,15 +34,31 @@ FUNC_PATH <- file.path(WD, "Functions")
 #' Whether to delete outputs to calculate all anew
 reset <- RESET[2]
 
-#' 0. rune the initialization script
-cat('   2.0 - Initializing\n')
-source(file.path(ROUT_PATH, "0.init.R"))
+###FONCTIONS NECESSAIRES
+source(file.path(FUNC_PATH,'avdth_position_conversion.R'))
+
+### Output names
+BIA_fish_file <- file.path(OUTPUT_PATH,
+                           "Phase_angle_per_fish.csv")
+BIA_main_output_file <- file.path(OUTPUT_PATH,
+                                  "MAIN-Phase_angle_per_set.csv")
+# MAIN_merged_file <- file.path(MAIN_OUTPUT_PATH,
+#                               "Phase_angle_with_NFob.csv")
+
+#' Save the objects to keep between sub-directory
+toKeep <- c("toKeep", ls())
 
 
-#' 1. Calculate mean phase angle per set
-cat('\n   2.1 - Calculating phase angle\n')
-source(file.path(ROUT_PATH, "1.calculate_phase_angle.R"))
+if (GET_BIA){
+#' 0. run the initialization script
+  cat('   2.0 - Initializing\n')
+  source(file.path(ROUT_PATH, "0.init.R"))
 
-#' 1. Calculate mean phase angle per set
-cat('\n   2.2 - Merge and analyze phase angle\n')
-source(file.path(ROUT_PATH, "2.merge_and_analyze_phase_angle.R"))
+
+  #' 1. Calculate mean phase angle per set
+  cat('\n   2.1 - Calculating phase angle\n')
+  source(file.path(ROUT_PATH, "1.calculate_phase_angle.R"))
+}
+
+
+rm(list = ls()[!ls() %in% toKeep])
