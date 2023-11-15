@@ -14,20 +14,6 @@
 #'
 #'#*******************************************************************************************************************
 
-###FONCTIONS NECESSAIRES
-source(file.path(FUNC_PATH,'1.nDaysPerMonth.R'))
-source(file.path(FUNC_PATH,'2.PrepObs.R'))
-source(file.path(FUNC_PATH, "2.RatioLogOverFad.R"))
-
-FOB_number_main_output_file <- file.path(OUTPUT_PATH,
-                                         "MAIN-NFob_from_IOTC.csv")
-
-#' Save the objects to keep between routines
-toKeepInOne <- c("toKeep",
-                 "toKeepInOne",
-                 ls())
-toKeep <- c(toKeep, "FOB_number_main_output_file")
-
 if (reset){
   unlink(OUTPUT_PATH,
          recursive = T,
@@ -58,5 +44,3 @@ cat(paste(text_title,
           text_output,
           sep = "\n\n"))
 sink()
-
-rm(list = ls()[!ls() %in% toKeepInOne])

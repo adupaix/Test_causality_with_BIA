@@ -48,11 +48,3 @@ ratio_file_name <- paste0("LOG_over_FAD_",
 
 write.csv2(df, file.path(OUTPUT_PATH2, ratio_file_name),
           row.names = F)
-
-
-
-
-toKeepInOne <- c(toKeepInOne, "OUTPUT_PATH2", "ratio_file_name")
-
-rm(list = ls()[!ls() %in% toKeepInOne])
-

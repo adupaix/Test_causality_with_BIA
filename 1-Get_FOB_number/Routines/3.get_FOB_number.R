@@ -26,6 +26,3 @@ main_df %>% dplyr::mutate(NLog = NFad * Log_over_Fad,
 
 write.csv2(main_df, FOB_number_main_output_file, row.names = F)
 
-toKeep <- c(toKeep, "FOB_number_main_output_file")
-
-rm(list = ls()[!ls() %in% toKeep])

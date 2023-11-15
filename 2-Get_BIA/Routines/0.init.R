@@ -14,21 +14,6 @@
 #'
 #'#*******************************************************************************************************************
 
-###FONCTIONS NECESSAIRES
-source(file.path(FUNC_PATH,'avdth_position_conversion.R'))
-
-BIA_fish_file <- file.path(OUTPUT_PATH,
-                           "Phase_angle_per_fish.csv")
-BIA_main_output_file <- file.path(OUTPUT_PATH,
-                                  "MAIN-Phase_angle_per_set.csv")
-MAIN_merged_file <- file.path(MAIN_OUTPUT_PATH,
-                              "Phase_angle_with_NFob.csv")
-
-#' Save the objects to keep between routines
-toKeepInTwo <- c("toKeep",
-                 "toKeepInTwo",
-                 ls())
-
 if (reset){
   unlink(OUTPUT_PATH,
          recursive = T,
@@ -55,5 +40,3 @@ cat(paste(text_title,
           text_output,
           sep = "\n\n"))
 sink()
-
-rm(list = ls()[!ls() %in% toKeepInTwo])
