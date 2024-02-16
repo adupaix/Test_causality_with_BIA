@@ -89,9 +89,10 @@ ggsave(file.path(OUTPUT_PATH, "PA_vs_density_DFAD.png"),
 
 ggplot(data)+
   geom_boxplot(aes(x = NFob, y = phase_angle_deg,
-                   group = NFob, color = Code.FAO),
+                   group = NFob, color = paste(Code.FAO,Fishing_mode)),
                width = 5)+
   facet_wrap(~Code.FAO, ncol = 1)+
+  scale_y_continuous(limits = c(0,NA))+
   scale_color_brewer("Species",
                      palette = "Set1")+
   xlab("FOB density (number of FOBs per 2° cell)")+
@@ -108,9 +109,10 @@ ggsave(file.path(OUTPUT_PATH, "boxplot_PA_vs_density_DFAD.png"),
 #'                 quarter (visible variations when plotting PA per set vs month)
 #'                 NFob (@todo: tests with NFad)
 #'                 sst removed (strong correlation with chla)
-#'                 set as a random effect
+#'                 set_id as a random effect
 
 data %>%
+  dplyr::mutate(Date = as.Date(Date)) %>%
   dplyr::mutate(quarter = lubridate::quarter(Date)) %>%
   dplyr::filter(!is.na(NFob)) -> data
 
@@ -121,5 +123,16 @@ gamm_yft <- mgcv::gamm(phase_angle_deg ~ s(NFob) + s(chla) + quarter,
                        data = data_yft)
 
 gam_yft <- mgcv::gam(phase_angle_deg ~ s(NFob) + s(chla) + quarter + s(set_id, bs = "re"),
-                     data = data_yft,
-                     )
+                     data = data_yft)
+
+data %>% dplyr::filter(Code.FAO == "SKJ") -> data_skj
+
+gamm_skj <- mgcv::gamm(phase_angle_deg ~ s(NFob) + s(chla) + quarter,
+                       random = list(set_id=~1),
+                       data = data_skj)
+
+gam_skj <- mgcv::gam(phase_angle_deg ~ s(NFob) + s(chla) + quarter + s(set_id, bs = "re"),
+                     data = data_skj)
+
+saveRDS(list(gamm_yft, gam_yft, gamm_skj, gam_skj),
+        file = file.path(OUTPUT_PATH, "gams.rds"))

@@ -24,6 +24,9 @@ main_outputs <- c(FOB_number_main_output_file,
                   BIA_fish_file,
                   BIA_with_chla_SST_file)
 
+MAIN_merged_file <- file.path(OUTPUT_PATH,
+                              "MAIN-merged_data_frame.csv")
+
 #' Save a log file
 t <- format(Sys.time(), ("%Y-%m-%d_%H:%M:%S"))
 log_file_name <- paste0("Summary_stat_analysis_",t, ".txt")
