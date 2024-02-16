@@ -45,7 +45,8 @@ data <- read.csv2(MAIN_merged_file)
 #' ***************
 
 data %>%
-  dplyr::filter(!is.na(Sample_size)) -> data
+  dplyr::filter(!is.na(Sample_size),
+                !Code.FAO == "BET") -> data
 
 
 p <- ggplot(data, aes(x=NFob,
@@ -113,26 +114,37 @@ ggsave(file.path(OUTPUT_PATH, "boxplot_PA_vs_density_DFAD.png"),
 
 data %>%
   dplyr::mutate(Date = as.Date(Date)) %>%
-  dplyr::mutate(quarter = lubridate::quarter(Date)) %>%
+  dplyr::mutate(quarter = as.factor(lubridate::quarter(Date)),
+                set_id = as.factor(set_id)) %>%
   dplyr::filter(!is.na(NFob)) -> data
 
 data %>% dplyr::filter(Code.FAO == "YFT") -> data_yft
 
-gamm_yft <- mgcv::gamm(phase_angle_deg ~ s(NFob) + s(chla) + quarter,
-                       random = list(set_id=~1),
-                       data = data_yft)
+# gamm_yft <- mgcv::gamm(phase_angle_deg ~ s(NFob) + s(chla) + quarter,
+#                        random = list(set_id=~1),
+#                        data = data_yft)
+# 
+# gam_yft <- mgcv::gam(phase_angle_deg ~ s(NFob) + s(chla) + s(Length) + quarter + s(set_id, bs = "re"),
+#                      data = data_yft)
 
-gam_yft <- mgcv::gam(phase_angle_deg ~ s(NFob) + s(chla) + quarter + s(set_id, bs = "re"),
-                     data = data_yft)
+glm_yft <- glm(phase_angle_deg ~ NFob + chla + Length + quarter, data = data_yft)
+
+summary(glm_yft)
+
+data_yft2 <- data_yft[-c(184,192,214),]
+
+glm_yft2 <- glm(phase_angle_deg ~ NFob + chla + Length + quarter, data = data_yft2)
 
 data %>% dplyr::filter(Code.FAO == "SKJ") -> data_skj
 
-gamm_skj <- mgcv::gamm(phase_angle_deg ~ s(NFob) + s(chla) + quarter,
-                       random = list(set_id=~1),
-                       data = data_skj)
+# gamm_skj <- mgcv::gamm(phase_angle_deg ~ s(NFob) + s(chla) + quarter,
+#                        random = list(set_id=~1),
+#                        data = data_skj)
+# 
+# gam_skj <- mgcv::gam(phase_angle_deg ~ s(NFob) + s(chla) + quarter + s(set_id, bs = "re"),
+#                      data = data_skj)
 
-gam_skj <- mgcv::gam(phase_angle_deg ~ s(NFob) + s(chla) + quarter + s(set_id, bs = "re"),
-                     data = data_skj)
+glm_skj <- glm(phase_angle_deg ~ NFob + chla + quarter, data = data_skj)
 
-saveRDS(list(gamm_yft, gam_yft, gamm_skj, gam_skj),
-        file = file.path(OUTPUT_PATH, "gams.rds"))
+saveRDS(list(glm_yft2, glm_skj),
+        file = file.path(OUTPUT_PATH, "glms.rds"))

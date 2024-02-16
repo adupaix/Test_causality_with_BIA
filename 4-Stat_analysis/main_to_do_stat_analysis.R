@@ -42,4 +42,4 @@ if (STAT_ANALYSIS){
   
 }
 
-rm(list = ls()[!ls() %in% toKeep])
+# rm(list = ls()[!ls() %in% toKeep])
