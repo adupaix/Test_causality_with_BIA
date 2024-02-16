@@ -10,7 +10,7 @@
 #'#*******************************************************************************************************************
 
 cat('\14')
-cat(crayon::bold("2. Getting values of environmental variables\n"))
+cat(crayon::bold("3. Getting values of environmental variables\n"))
 cat(crayon::bold("----------------------------------------------\n"))
 
 WD <- file.path(STUDY_DIR, "3-Get_enviro")
