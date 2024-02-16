@@ -65,8 +65,6 @@ if (CALCULATE_FOB_NUMBER){
   
   
   #' 3. Merge the outputs from the 2 first routines and calculate the number of FOBs
-  #' @ATTENTION: script a modifier. Pour l'instant c'est une version de developpement
-  #'             adaptee au fait que je n'ai pas encore recu les donnees Ob7 des bonnes annees
   cat('\n   1.3 - Getting FOB number from 1.1 and 1.2 outputs\n')
   source(file.path(ROUT_PATH, "3.get_FOB_number.R"))
 

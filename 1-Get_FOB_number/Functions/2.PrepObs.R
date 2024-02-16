@@ -13,7 +13,7 @@
 
 prep.obs <- function (Ob7){
   
-  tic(msg = "Preparation of observers data", quiet = F)
+  cat("Preparation of observers data\n")
   
   cat("Starting fob.null function \n")
   Ob7 <- fob.null(Ob7)
@@ -26,7 +26,6 @@ prep.obs <- function (Ob7){
   cat("Starting doubl.obs function \n")
   Ob7 <- doubl.obs(Ob7)
   
-  toc()
   return(Ob7)
   
 }
