@@ -18,7 +18,7 @@ srcUsedPackages <- c("plyr", "dplyr", "raster", "crayon",
                      "ggplot2", "ggpubr", "sf", "spdep",
                      # "tictoc", "lattice", "readr", "ade4",
                      # "itsadug",
-                     "mgcv", "gratia")
+                     "mgcv", "gratia", "MASS", "caret")
 
 
 installAndLoad_packages(srcUsedPackages, loadPackages = TRUE)
