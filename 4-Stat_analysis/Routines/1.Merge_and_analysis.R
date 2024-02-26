@@ -116,7 +116,11 @@ data %>%
   dplyr::mutate(Date = as.Date(Date)) %>%
   dplyr::mutate(quarter = as.factor(lubridate::quarter(Date)),
                 set_id = as.factor(set_id)) %>%
-  dplyr::filter(!is.na(NFob)) -> data
+  dplyr::filter(!is.na(NFob),
+                Fishing_mode == "FAD") %>%
+  dplyr::mutate(NFob_s = scale(NFob, center = F),
+                chla_s = scale(chla, center = F),
+                Length_s = scale(Length, center = F))-> data
 
 data %>% dplyr::filter(Code.FAO == "YFT") -> data_yft
 
@@ -127,24 +131,78 @@ data %>% dplyr::filter(Code.FAO == "YFT") -> data_yft
 # gam_yft <- mgcv::gam(phase_angle_deg ~ s(NFob) + s(chla) + s(Length) + quarter + s(set_id, bs = "re"),
 #                      data = data_yft)
 
-glm_yft <- glm(phase_angle_deg ~ NFob + chla + Length + quarter, data = data_yft)
+lm_yft <- lm(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter, data = data_yft)
+lm_yft2 <- MASS::stepAIC(lm_yft)
 
-summary(glm_yft)
+# Leave one out cross validation (LOOCV)
+# https://www.statology.org/leave-one-out-cross-validation-in-r/
+# https://www.statology.org/leave-one-out-cross-validation/
+ctrl <- caret::trainControl(method = "LOOCV") # specify the cross-validation method
 
-data_yft2 <- data_yft[-c(184,192,214),]
+lm_yft_loocv <- caret::train(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter,
+                             data = data_yft, method = "lm", trControl = ctrl)
 
-glm_yft2 <- glm(phase_angle_deg ~ NFob + chla + Length + quarter, data = data_yft2)
+data_lm <- data.frame(matrix(nrow = 0, ncol = 16))
+names(data_lm) <- c("removed","NFob","NFob.p","chla","chla.p","Length","Length.p",
+                    "quarter2","quarter2.p","quarter3","quarter3.p","quarter4",
+                    "quarter4.p", "R.sq", "F", "F.p")
+lms <- list()
+for (i in 1:dim(data_yft)[1]){
+  lm_ <- stepAIC(lm(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter, data = data_yft[-i,]))
+  
+  pvalues <- summary(lm_)$coefficients[, 4]
+  
+  data_lm[i,] <- c(i, lm_$coefficients["NFob_s"], pvalues["NFob_s"],
+                   lm_$coefficients["chla_s"], pvalues["chla_s"],
+                   lm_$coefficients["Length_s"], pvalues["Length_s"],
+                   lm_$coefficients["quarter2"], pvalues["quarter2"],
+                   lm_$coefficients["quarter3"], pvalues["quarter3"],
+                   lm_$coefficients["quarter4"], pvalues["quarter4"],
+                   summary(lm_)$adj.r.squared, summary(lm_)$fstatistic["value"],
+                   pf(summary(lm_)$fstatistic[1], summary(lm_)$fstatistic[2],
+                      summary(lm_)$fstatistic[3], lower.tail = FALSE))
+  lms[[i]] <- lm_
+}
+data_lm_yft <- data_lm
+
+write.csv(data_lm_yft,
+          file.path(OUTPUT_PATH, "loocv_lm_yft.csv"))
 
 data %>% dplyr::filter(Code.FAO == "SKJ") -> data_skj
 
-# gamm_skj <- mgcv::gamm(phase_angle_deg ~ s(NFob) + s(chla) + quarter,
-#                        random = list(set_id=~1),
-#                        data = data_skj)
-# 
-# gam_skj <- mgcv::gam(phase_angle_deg ~ s(NFob) + s(chla) + quarter + s(set_id, bs = "re"),
-#                      data = data_skj)
 
-glm_skj <- glm(phase_angle_deg ~ NFob + chla + quarter, data = data_skj)
+lm_skj <- lm(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter, data = data_skj)
+lm_skj2 <- MASS::stepAIC(lm_skj)
 
-saveRDS(list(glm_yft2, glm_skj),
-        file = file.path(OUTPUT_PATH, "glms.rds"))
+lm_skj_loocv <- train(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter,
+                      data = data_skj, method = "lm", trControl = ctrl)
+
+data_lm <- data.frame(matrix(nrow = 0, ncol = 16))
+names(data_lm) <- c("removed","NFob","NFob.p","chla","chla.p","Length","Length.p",
+                    "quarter2","quarter2.p","quarter3","quarter3.p","quarter4",
+                    "quarter4.p", "R.sq", "F", "F.p")
+
+lms <- list()
+for (i in 1:dim(data_skj)[1]){
+  lm_ <- stepAIC(lm(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter, data = data_skj[-i,]))
+  
+  pvalues <- summary(lm_)$coefficients[, 4]
+  
+  data_lm[i,] <- c(i, lm_$coefficients["NFob_s"], pvalues["NFob_s"],
+                   lm_$coefficients["chla_s"], pvalues["chla_s"],
+                   lm_$coefficients["Length_s"], pvalues["Length_s"],
+                   lm_$coefficients["quarter2"], pvalues["quarter2"],
+                   lm_$coefficients["quarter3"], pvalues["quarter3"],
+                   lm_$coefficients["quarter4"], pvalues["quarter4"],
+                   summary(lm_)$adj.r.squared, summary(lm_)$fstatistic["value"],
+                   pf(summary(lm_)$fstatistic[1], summary(lm_)$fstatistic[2],
+                      summary(lm_)$fstatistic[3], lower.tail = FALSE))
+  lms[[i]] <- lm_
+}
+data_lm_skj <- data_lm
+summary(data_lm_skj)
+write.csv(data_lm_skj,
+          file.path(OUTPUT_PATH, "loocv_lm_skj.csv"))
+
+saveRDS(list(lm_yft, lm_yft2, lm_skj, lm_skj2),
+        file = file.path(OUTPUT_PATH, "lms.rds"))
