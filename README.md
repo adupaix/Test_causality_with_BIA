@@ -1,10 +1,10 @@
 # The low condition of tropical tuna associated with drifting Fish Aggregating Devices, a chicken-and-egg story
 
-[![License](https://img.shields.io/github/license/adupaix/Test_causality_with_BIA)](https://github.com/adupaix/Test_causality_with_BIA/blob/master/LICENSE)
-<!--
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7915850.svg)](https://doi.org/10.5281/zenodo.7915850)
-[![Latest Release](https://img.shields.io/github/release/adupaix/Quantif_impact_FAD)](https://github.com/adupaix/Quantif_impact_FAD/releases)
--->
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+[![DOI](https://zenodo.org/badge/710848069.svg)](https://zenodo.org/doi/10.5281/zenodo.10711575)
+[![Latest Release](https://img.shields.io/github/release/adupaix/Test_causality_with_BIA)](https://github.com/adupaix/Test_causality_with_BIA/releases)
+
+
 ---
 
 Scripts used to generate the results and figures of the following paper:
