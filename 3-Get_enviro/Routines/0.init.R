@@ -14,19 +14,6 @@
 #'
 #'#*******************************************************************************************************************
 
-###FONCTIONS NECESSAIRES
-source(file.path(FUNC_PATH,'avdth_position_conversion.R'))
-
-BIA_main_output_file <- file.path(OUTPUT_PATH,
-                                  "MAIN-Phase_angle_per_set.csv")
-MAIN_merged_file <- file.path(MAIN_OUTPUT_PATH,
-                              "Phase_angle_with_NFob.csv")
-
-#' Save the objects to keep between routines
-toKeepInTwo <- c("toKeep",
-                 "toKeepInTwo",
-                 ls())
-
 if (reset){
   unlink(OUTPUT_PATH,
          recursive = T,
@@ -35,13 +22,16 @@ if (reset){
 
 #' Save a log file
 t <- format(Sys.time(), ("%Y-%m-%d_%H:%M:%S"))
-log_file_name <- paste0("Summary_BIA_",t, ".txt")
-text_title <- paste0("Calculation of phase angle\n============================\n",t,"\n")
+log_file_name <- paste0("Summary_enviro_",t, ".txt")
+text_title <- paste0("Extraction of environmental variables\n============================\n",t,"\n")
 text_arguments <- paste0("Arguments:\n----------",
                     "\nYEARS: ", paste(YEARS, collapse = ","),
                     "\nRESET: ", reset)
 text_data <- paste0("Datasets used:\n-------------",
-               "\nBIA_FILE: ", basename(BIA_FILE))
+                    "\nCHLA_NC_DIR: ", basename(CHLA_NC_DIR),
+                    "\n   Chla files: ", paste(list.files(CHLA_NC_DIR),
+                                             collapse = "\n             "),
+                    "\nSST_NC_FILE: ", basename(SST_NC_FILE))
 text_output <- paste0("Outputs saved in: ", OUTPUT_PATH)
 
 try(dir.create(OUTPUT_PATH, recursive = T, showWarnings = F))
@@ -53,5 +43,3 @@ cat(paste(text_title,
           text_output,
           sep = "\n\n"))
 sink()
-
-rm(list = ls()[!ls() %in% toKeepInTwo])

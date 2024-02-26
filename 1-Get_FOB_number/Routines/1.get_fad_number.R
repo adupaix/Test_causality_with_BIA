@@ -107,7 +107,3 @@ data %>%
 nfad_file_name <- "NFad_table.csv"
 
 write.csv2(data, file = file.path(OUTPUT_PATH1, nfad_file_name), row.names = F)
-
-toKeepInOne <- c(toKeepInOne, "OUTPUT_PATH1", "nfad_file_name")
-
-rm(list = ls()[!ls() %in% toKeepInOne])

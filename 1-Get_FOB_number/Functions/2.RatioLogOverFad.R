@@ -168,7 +168,7 @@ fill.raster <- function(data, rast){
 
 create.raster <- function(gsize){
   
-  r <- raster(
+  r <- raster::raster(
     res = gsize,
     xmn = 20,
     xmx = 100,

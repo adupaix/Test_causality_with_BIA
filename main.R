@@ -13,10 +13,12 @@
 source(file.path(FUNC_PATH, "utils.R")) 
 source(file.path(FUNC_PATH, "install_libraries.R"))
 
-srcUsedPackages <- c("plyr", "dplyr", "raster", "tictoc", "crayon",
-                     "ncdf4", "chron", "lattice", "readr", "lubridate",
-                     "ggplot2", "ggpubr", "ade4", "sf", "spdep",
-                     "mgcv", "gratia")
+srcUsedPackages <- c("plyr", "dplyr", "raster", "crayon",
+                     "ncdf4", "chron", "lubridate",
+                     "ggplot2", "ggpubr", "sf", "spdep",
+                     # "tictoc", "lattice", "readr", "ade4",
+                     # "itsadug",
+                     "mgcv", "gratia", "MASS", "caret")
 
 
 installAndLoad_packages(srcUsedPackages, loadPackages = TRUE)
@@ -31,11 +33,19 @@ toKeep <- c("toKeep", ls())
 
 #' Get FOB number
 #' ***************
-if (CALCULATE_FOB_NUMBER){
-  source(file.path(STUDY_DIR, "1-Get_FOB_number/main_to_get_fob_number.R"))
-}
+source(file.path(STUDY_DIR, "1-Get_FOB_number/main_to_get_fob_number.R"))
 
-if (ANALYZE_BIA){
-  source(file.path(STUDY_DIR, "2-BIA_analysis/main_to_analyze_BIA.R"))
-}
+
+#' Get phase angle values
+#' ********************
+source(file.path(STUDY_DIR, "2-Get_BIA/main_to_get_BIA.R"))
+
+
+#' Get environmental variables values
+#' ***********************************
+source(file.path(STUDY_DIR, "3-Get_enviro/main_to_get_enviro.R"))
+
+#' Perform statistical analysis
+#' ******************************
+source(file.path(STUDY_DIR, "4-Stat_analysis/main_to_do_stat_analysis.R"))
 

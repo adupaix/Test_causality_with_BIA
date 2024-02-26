@@ -20,19 +20,24 @@ if (reset){
          force = T)
 }
 
+main_outputs <- c(FOB_number_main_output_file,
+                  BIA_fish_file,
+                  BIA_with_chla_SST_file)
+
+MAIN_merged_file <- file.path(OUTPUT_PATH,
+                              "MAIN-merged_data_frame.csv")
+
 #' Save a log file
 t <- format(Sys.time(), ("%Y-%m-%d_%H:%M:%S"))
-log_file_name <- paste0("Summary_NFob_from_IOTC_data_",t, ".txt")
-text_title <- paste0("Calculation of NFob\n=======================\n",t,"\n")
+log_file_name <- paste0("Summary_stat_analysis_",t, ".txt")
+text_title <- paste0("Statistical analysis of PA\n============================\n",t,"\n")
 text_arguments <- paste0("Arguments:\n----------",
-                    "\nRESOLUTION: ", RESOLUTION,
                     "\nYEARS: ", paste(YEARS, collapse = ","),
                     "\nRESET: ", reset)
-text_data <- paste0("Datasets used:\n-------------",
-               "\nIOTC_3BU_FILE: ", basename(IOTC_3BU_FILE),
-               "\nIOTC_CELLREF_FILE: ", basename(IOTC_CELLREF_FILE),
-               "\nOBSERVERS_FOBFILE: ", basename(OBSERVERS_FOBFILE),
-               "\nOBSERVERS_ACTIVITYFILE: ", basename(OBSERVERS_ACTIVITYFILE))
+text_data <- paste0("Previous outputs used:\n-------------",
+                    paste(file.path(basename(dirname(main_outputs)),
+                                          basename(main_outputs)),
+                          collapse = "\n"))
 text_output <- paste0("Outputs saved in: ", OUTPUT_PATH)
 
 try(dir.create(OUTPUT_PATH, recursive = T, showWarnings = F))

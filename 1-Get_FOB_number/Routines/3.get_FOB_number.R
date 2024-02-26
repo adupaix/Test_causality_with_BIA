@@ -14,7 +14,8 @@
 NFad_df <- read.csv2(file.path(OUTPUT_PATH1, nfad_file_name))
 Ratio_df <- read.csv2(file.path(OUTPUT_PATH2, ratio_file_name))
 
-main_df <- merge(NFad_df, Ratio_df)
+main_df <- merge(NFad_df, Ratio_df,
+                 all.x = T)
 
 main_df %>% dplyr::mutate(NLog = NFad * Log_over_Fad,
                           se_NLog = se_NFad * Log_over_Fad,
@@ -26,6 +27,3 @@ main_df %>% dplyr::mutate(NLog = NFad * Log_over_Fad,
 
 write.csv2(main_df, FOB_number_main_output_file, row.names = F)
 
-toKeep <- c(toKeep, "FOB_number_main_output_file")
-
-rm(list = ls()[!ls() %in% toKeep])
