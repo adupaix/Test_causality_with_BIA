@@ -99,18 +99,30 @@ ggplot(data)+
   xlab("FOB density (number of FOBs per 2° cell)")+
   ylab("Phase angle (°)") -> p3
 
+ggplot(data %>% dplyr::filter(Fishing_mode == "FAD"))+
+  geom_boxplot(aes(x = NFob, y = phase_angle_deg,
+                   group = NFob, color = Code.FAO),
+               width = 5)+
+  facet_wrap(~Code.FAO, ncol = 1)+
+  scale_y_continuous(limits = c(0,NA))+
+  scale_color_brewer("Species",
+                     palette = "Set1")+
+  xlab("FOB density (number of FOBs per 2° cell)")+
+  ylab("Phase angle (°)") -> p4
+
+ggsave(file.path(OUTPUT_PATH, "boxplot_PA_vs_density.png"),
+       p3, width = 6, height = 8)
 ggsave(file.path(OUTPUT_PATH, "boxplot_PA_vs_density_DFAD.png"),
-       p3, width = 8, height = 10)
+       p4, width = 6, height = 8)
 
 #' ***************
-#' Build GAMM
+#' Build LMs
 #' ***************
 
 #' kept variables: chla
 #'                 quarter (visible variations when plotting PA per set vs month)
 #'                 NFob (@todo: tests with NFad)
 #'                 sst removed (strong correlation with chla)
-#'                 set_id as a random effect
 
 data %>%
   dplyr::mutate(Date = as.Date(Date)) %>%
@@ -133,6 +145,11 @@ data %>% dplyr::filter(Code.FAO == "YFT") -> data_yft
 
 lm_yft <- lm(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter, data = data_yft)
 lm_yft2 <- MASS::stepAIC(lm_yft)
+
+png(filename = file.path(OUTPUT_PATH, "diagnostic_plots_lm_yft.png"))
+par(mfrow = c(2,2))
+plot(lm_yft2)
+dev.off()
 
 # Leave one out cross validation (LOOCV)
 # https://www.statology.org/leave-one-out-cross-validation-in-r/
@@ -173,6 +190,12 @@ data %>% dplyr::filter(Code.FAO == "SKJ") -> data_skj
 
 lm_skj <- lm(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter, data = data_skj)
 lm_skj2 <- MASS::stepAIC(lm_skj)
+
+
+png(filename = file.path(OUTPUT_PATH, "diagnostic_plots_lm_skj.png"))
+par(mfrow = c(2,2))
+plot(lm_skj2)
+dev.off()
 
 lm_skj_loocv <- train(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter,
                       data = data_skj, method = "lm", trControl = ctrl)
