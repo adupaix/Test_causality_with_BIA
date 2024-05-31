@@ -130,26 +130,15 @@ data %>%
                 set_id = as.factor(set_id)) %>%
   dplyr::filter(!is.na(NFob),
                 Fishing_mode == "FAD") %>%
-  dplyr::mutate(NFob_s = scale(NFob, center = F),
-                chla_s = scale(chla, center = F),
+  dplyr::mutate(NFob_s = as.numeric(scale(NFob, center = F)),
+                chla_s = as.numeric(scale(chla, center = F)),
                 Length_s = scale(Length, center = F))-> data
 
 data %>% dplyr::filter(Code.FAO == "YFT") -> data_yft
 
-# gamm_yft <- mgcv::gamm(phase_angle_deg ~ s(NFob) + s(chla) + quarter,
-#                        random = list(set_id=~1),
-#                        data = data_yft)
-# 
-# gam_yft <- mgcv::gam(phase_angle_deg ~ s(NFob) + s(chla) + s(Length) + quarter + s(set_id, bs = "re"),
-#                      data = data_yft)
+build.and.compare.models(data_yft, suffix = "_yft",
+                         output_path = OUTPUT_PATH)
 
-lm_yft <- lm(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter, data = data_yft)
-lm_yft2 <- MASS::stepAIC(lm_yft)
-
-png(filename = file.path(OUTPUT_PATH, "diagnostic_plots_lm_yft.png"))
-par(mfrow = c(2,2))
-plot(lm_yft2)
-dev.off()
 
 # Leave one out cross validation (LOOCV)
 # https://www.statology.org/leave-one-out-cross-validation-in-r/
