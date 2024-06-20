@@ -116,13 +116,18 @@ ggsave(file.path(OUTPUT_PATH, "boxplot_PA_vs_density_DFAD.png"),
        p4, width = 6, height = 8)
 
 #' ***************
-#' Build LMs
+#' Spearman + models
 #' ***************
 
 #' kept variables: chla
 #'                 quarter (visible variations when plotting PA per set vs month)
 #'                 NFob (@todo: tests with NFad)
 #'                 sst removed (strong correlation with chla)
+
+dir.create(file.path(OUTPUT_PATH,
+                     c("skj","yft")),
+           recursive = T,
+           showWarnings = F)
 
 data %>%
   dplyr::mutate(Date = as.Date(Date)) %>%
@@ -135,86 +140,47 @@ data %>%
                 Length_s = scale(Length, center = F))-> data
 
 data %>% dplyr::filter(Code.FAO == "YFT") -> data_yft
+data %>% dplyr::filter(Code.FAO == "SKJ") -> data_skj
+data_yft %>%
+  dplyr::filter(phase_angle_deg < 40) -> data_yft_nooutliers
+data_skj %>%
+  dplyr::filter(phase_angle_deg < 40) -> data_skj_nooutliers
 
-build.and.compare.models(data_yft, suffix = "_yft",
+# Spearman correlation tests
+sink(file.path(OUTPUT_PATH, "yft", "spearman.txt"))
+print(cor.test(data_yft$phase_angle_deg,
+               data_yft$NFob,
+               method = "spearman"))
+sink()
+sink(file.path(OUTPUT_PATH, "yft_nooutliers", "spearman.txt"))
+print(cor.test(data_yft_nooutliers$phase_angle_deg,
+               data_yft_nooutliers$NFob,
+               method = "spearman"))
+sink()
+
+sink(file.path(OUTPUT_PATH, "skj", "spearman.txt"))
+print(cor.test(data_skj$phase_angle_deg,
+               data_skj$NFob,
+               method = "spearman"))
+sink()
+sink(file.path(OUTPUT_PATH, "skj_nooutliers", "spearman.txt"))
+print(cor.test(data_skj_nooutliers$phase_angle_deg,
+               data_skj_nooutliers$NFob,
+               method = "spearman"))
+sink()
+
+# Build all models for YFT and SKJ
+#      with whole datasets and removing outliers (with PA values above 40)
+build.and.compare.models(data_yft, dir = "yft",
+                         output_path = OUTPUT_PATH)
+build.and.compare.models(data_yft %>%
+                           dplyr::filter(phase_angle_deg < 40),
+                         dir = "yft_nooutliers",
                          output_path = OUTPUT_PATH)
 
-
-# Leave one out cross validation (LOOCV)
-# https://www.statology.org/leave-one-out-cross-validation-in-r/
-# https://www.statology.org/leave-one-out-cross-validation/
-ctrl <- caret::trainControl(method = "LOOCV") # specify the cross-validation method
-
-lm_yft_loocv <- caret::train(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter,
-                             data = data_yft, method = "lm", trControl = ctrl)
-
-data_lm <- data.frame(matrix(nrow = 0, ncol = 16))
-names(data_lm) <- c("removed","NFob","NFob.p","chla","chla.p","Length","Length.p",
-                    "quarter2","quarter2.p","quarter3","quarter3.p","quarter4",
-                    "quarter4.p", "R.sq", "F", "F.p")
-lms <- list()
-for (i in 1:dim(data_yft)[1]){
-  lm_ <- stepAIC(lm(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter, data = data_yft[-i,]))
-  
-  pvalues <- summary(lm_)$coefficients[, 4]
-  
-  data_lm[i,] <- c(i, lm_$coefficients["NFob_s"], pvalues["NFob_s"],
-                   lm_$coefficients["chla_s"], pvalues["chla_s"],
-                   lm_$coefficients["Length_s"], pvalues["Length_s"],
-                   lm_$coefficients["quarter2"], pvalues["quarter2"],
-                   lm_$coefficients["quarter3"], pvalues["quarter3"],
-                   lm_$coefficients["quarter4"], pvalues["quarter4"],
-                   summary(lm_)$adj.r.squared, summary(lm_)$fstatistic["value"],
-                   pf(summary(lm_)$fstatistic[1], summary(lm_)$fstatistic[2],
-                      summary(lm_)$fstatistic[3], lower.tail = FALSE))
-  lms[[i]] <- lm_
-}
-data_lm_yft <- data_lm
-
-write.csv(data_lm_yft,
-          file.path(OUTPUT_PATH, "loocv_lm_yft.csv"))
-
-data %>% dplyr::filter(Code.FAO == "SKJ") -> data_skj
-
-
-lm_skj <- lm(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter, data = data_skj)
-lm_skj2 <- MASS::stepAIC(lm_skj)
-
-
-png(filename = file.path(OUTPUT_PATH, "diagnostic_plots_lm_skj.png"))
-par(mfrow = c(2,2))
-plot(lm_skj2)
-dev.off()
-
-lm_skj_loocv <- train(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter,
-                      data = data_skj, method = "lm", trControl = ctrl)
-
-data_lm <- data.frame(matrix(nrow = 0, ncol = 16))
-names(data_lm) <- c("removed","NFob","NFob.p","chla","chla.p","Length","Length.p",
-                    "quarter2","quarter2.p","quarter3","quarter3.p","quarter4",
-                    "quarter4.p", "R.sq", "F", "F.p")
-
-lms <- list()
-for (i in 1:dim(data_skj)[1]){
-  lm_ <- stepAIC(lm(phase_angle_deg ~ NFob_s + chla_s + Length_s + quarter, data = data_skj[-i,]))
-  
-  pvalues <- summary(lm_)$coefficients[, 4]
-  
-  data_lm[i,] <- c(i, lm_$coefficients["NFob_s"], pvalues["NFob_s"],
-                   lm_$coefficients["chla_s"], pvalues["chla_s"],
-                   lm_$coefficients["Length_s"], pvalues["Length_s"],
-                   lm_$coefficients["quarter2"], pvalues["quarter2"],
-                   lm_$coefficients["quarter3"], pvalues["quarter3"],
-                   lm_$coefficients["quarter4"], pvalues["quarter4"],
-                   summary(lm_)$adj.r.squared, summary(lm_)$fstatistic["value"],
-                   pf(summary(lm_)$fstatistic[1], summary(lm_)$fstatistic[2],
-                      summary(lm_)$fstatistic[3], lower.tail = FALSE))
-  lms[[i]] <- lm_
-}
-data_lm_skj <- data_lm
-summary(data_lm_skj)
-write.csv(data_lm_skj,
-          file.path(OUTPUT_PATH, "loocv_lm_skj.csv"))
-
-saveRDS(list(lm_yft, lm_yft2, lm_skj, lm_skj2),
-        file = file.path(OUTPUT_PATH, "lms.rds"))
+build.and.compare.models(data_skj, dir = "skj",
+                         output_path = OUTPUT_PATH)
+build.and.compare.models(data_skj %>%
+                           dplyr::filter(phase_angle_deg < 40),
+                         dir = "skj_nooutliers",
+                         output_path = OUTPUT_PATH)
