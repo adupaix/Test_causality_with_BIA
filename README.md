@@ -1,15 +1,13 @@
 # The low condition of tropical tuna associated with drifting Fish Aggregating Devices, a chicken-and-egg story
 
 [![License](https://img.shields.io/github/license/adupaix/Test_causality_with_BIA)](https://github.com/adupaix/Test_causality_with_BIA/blob/master/LICENSE)
-<!--
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7915850.svg)](https://doi.org/10.5281/zenodo.7915850)
-[![Latest Release](https://img.shields.io/github/release/adupaix/Quantif_impact_FAD)](https://github.com/adupaix/Quantif_impact_FAD/releases)
--->
+[![DOI](https://zenodo.org/badge/710848069.svg)](https://zenodo.org/doi/10.5281/zenodo.10711575)
+[![Latest Release](https://img.shields.io/github/release/adupaix/Test_causality_with_BIA)](https://github.com/adupaix/Test_causality_with_BIA/releases)
 ---
 
 Scripts used to generate the results and figures of the following paper:
 
-Dupaix A., Capello M., Dagorn L., Deneubourg J.-L.  (*in prep*). The low condition of tropical tuna associated with drifting Fish Aggregating Devices, a chicken-and-egg story.
+Dupaix A., Deneubourg J.-L., Forget F., Tolloti M., Dagorn L., Capello M. (*in prep*). The low condition of tropical tuna associated with drifting Fish Aggregating Devices, a chicken-and-egg story.
 
 Should you have any question, please contact me: amael.dupaix@ens-lyon.fr
 
