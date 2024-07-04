@@ -106,7 +106,8 @@ ggplot(data %>% dplyr::filter(Fishing_mode == "FAD"))+
   facet_wrap(~Code.FAO, ncol = 1)+
   scale_y_continuous(limits = c(0,NA))+
   scale_color_brewer("Species",
-                     palette = "Set1")+
+                     palette = "Set1",
+                     direction = -1)+
   xlab("FOB density (number of FOBs per 2° cell)")+
   ylab("Phase angle (°)") -> p4
 
