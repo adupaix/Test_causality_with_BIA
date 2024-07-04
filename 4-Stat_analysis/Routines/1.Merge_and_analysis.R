@@ -125,9 +125,15 @@ ggsave(file.path(OUTPUT_PATH, "boxplot_PA_vs_density_DFAD.png"),
 #'                 sst removed (strong correlation with chla)
 
 dir.create(file.path(OUTPUT_PATH,
-                     c("skj","yft")),
+                       "skj"),
+             recursive = T,
+             showWarnings = F)
+dir.create(file.path(OUTPUT_PATH,
+                     "yft"),
            recursive = T,
            showWarnings = F)
+
+
 
 data %>%
   dplyr::mutate(Date = as.Date(Date)) %>%
@@ -145,6 +151,24 @@ data_yft %>%
   dplyr::filter(phase_angle_deg < 40) -> data_yft_nooutliers
 data_skj %>%
   dplyr::filter(phase_angle_deg < 40) -> data_skj_nooutliers
+
+ggplot(data_yft)+
+  geom_boxplot(aes(x = NFob, y = phase_angle_deg,
+                   group = NFob),
+               color = "red",
+               width = 5, outlier.color = "red",
+               outlier.alpha = 0.5)+
+  scale_y_continuous(limits = c(0,NA))+
+  xlab("FOB density (number of FOBs per 2° cell)")+
+  ylab("Phase angle (°)")+
+  theme(panel.background = element_rect(fill = "white",
+                                        color = "black"),
+        panel.grid = element_line(linetype = "dashed",
+                                  linewidth = 0.5,
+                                  color = "grey")) -> boxplot_yft
+
+ggsave(file.path(OUTPUT_PATH, "boxplot_PA_vs_density_yft.png"),
+       boxplot_yft, width = 6, height = 6)
 
 # Spearman correlation tests
 sink(file.path(OUTPUT_PATH, "yft", "spearman.txt"))
