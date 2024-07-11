@@ -1,4 +1,4 @@
-# The low condition of tropical tuna associated with drifting Fish Aggregating Devices, a chicken-and-egg story
+# Physiological condition as a cause or consequence of behavior, a chicken-and-egg story
 
 [![License](https://img.shields.io/github/license/adupaix/Test_causality_with_BIA)](https://github.com/adupaix/Test_causality_with_BIA/blob/master/LICENSE)
 [![DOI](https://zenodo.org/badge/710848069.svg)](https://zenodo.org/doi/10.5281/zenodo.10711575)
@@ -7,7 +7,7 @@
 
 Scripts used to generate the results and figures of the following paper:
 
-Dupaix A., Deneubourg J.-L., Forget F., Tolloti M., Dagorn L., Capello M. (*in prep*). The low condition of tropical tuna associated with drifting Fish Aggregating Devices, a chicken-and-egg story.
+Dupaix A., Deneubourg J.-L., Forget F., Tolloti M., Dagorn L., Capello M. (*submitted*). Physiological condition as a cause or consequence of behavior, a chicken-and-egg story.
 
 Should you have any question, please contact me: amael.dupaix@ens-lyon.fr
 
