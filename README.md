@@ -1,19 +1,9 @@
 # Physiological condition as a cause or consequence of behavior, a chicken-and-egg story
 
-<<<<<<< HEAD
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
-[![DOI](https://zenodo.org/badge/710848069.svg)](https://zenodo.org/doi/10.5281/zenodo.10711575)
-[![Latest Release](https://img.shields.io/github/release/adupaix/Test_causality_with_BIA)](https://github.com/adupaix/Test_causality_with_BIA/releases)
-
-
-=======
 [![License](https://img.shields.io/github/license/adupaix/Test_causality_with_BIA)](https://github.com/adupaix/Test_causality_with_BIA/blob/master/LICENSE)
 [![DOI](https://zenodo.org/badge/710848069.svg)](https://zenodo.org/doi/10.5281/zenodo.10711575)
 [![Latest Release](https://img.shields.io/github/release/adupaix/Test_causality_with_BIA)](https://github.com/adupaix/Test_causality_with_BIA/releases)
-<<<<<<< HEAD
->>>>>>> develop
-=======
->>>>>>> develop
+
 ---
 
 Scripts used to generate the results and figures of the following paper:
