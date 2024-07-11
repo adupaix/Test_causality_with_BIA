@@ -27,6 +27,8 @@ main_outputs <- c(FOB_number_main_output_file,
 MAIN_merged_file <- file.path(OUTPUT_PATH,
                               "MAIN-merged_data_frame.csv")
 
+source(file.path(FUNC_PATH, "build_and_compare_models.R"))
+
 #' Save a log file
 t <- format(Sys.time(), ("%Y-%m-%d_%H:%M:%S"))
 log_file_name <- paste0("Summary_stat_analysis_",t, ".txt")

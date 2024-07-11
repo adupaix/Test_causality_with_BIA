@@ -18,8 +18,8 @@ srcUsedPackages <- c("plyr", "dplyr", "raster", "crayon",
                      "ggplot2", "ggpubr", "sf", "spdep",
                      # "tictoc", "lattice", "readr", "ade4",
                      # "itsadug",
-                     "mgcv", "gratia", "MASS", "caret")
-
+                     "mgcv", "gratia", "MASS", "caret",
+                     "minpack.lm")
 
 installAndLoad_packages(srcUsedPackages, loadPackages = TRUE)
 
