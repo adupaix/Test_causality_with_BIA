@@ -25,11 +25,11 @@ To run the analysis:
 
 ## Datasets
 
-The files containing the ratio between DFADs and NLOGs and that containing BIA data are provided as csv files in the `Outputs` directory.
+The files containing the number of FOBs is provided as csv file in the `Outputs` directory.
 
-The Bio-electrical Impedance Analysis (BIA) data, collected by observers onboard French purse seine vessels, as part of the [MANFAD](https://manfad-project.com/en/) project. It can be obtained through a datacall to the [Ob7 - Observatoire des Écosystèmes Pélagiques Tropicaux exploités](https://www.ob7.ird.fr/en/pages/datacall.html). The csv file is read in `BIA_FILE`.
+The Bio-electrical Impedance Analysis (BIA) data, collected by observers onboard French purse seine vessels, as part of the [MANFAD](https://manfad-project.com/en/) project. The csv file is in the `0-Data` folder, read by the scripts in `BIA_FILE`.
 
-The following IOTC (Indian Ocean Tuna Commission) datasets are used in the scripts:
+To calculate the number of FOBs, the following IOTC (Indian Ocean Tuna Commission) datasets are used in the scripts:
 - [Instrumented buoy data (Jan 2020 - June 2023)](https://iotc.org/documents/instrumented-buoy-data-january-2020-june-2023) (read in `IOTC_3BU_FILE`)
 - [Code list for CWP grids](https://iotc.org/WGFAD/03/Data/00-CWP) (codes for 1° cells used, read in `IOTC_CELLREF_FILE`)
 
