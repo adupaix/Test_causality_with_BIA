@@ -1,5 +1,4 @@
 # Physiological condition as a cause or consequence of behavior, a chicken-and-egg story
-=======
 
 [![License](https://img.shields.io/github/license/adupaix/Test_causality_with_BIA)](https://github.com/adupaix/Test_causality_with_BIA/blob/master/LICENSE)
 [![DOI](https://zenodo.org/badge/710848069.svg)](https://zenodo.org/doi/10.5281/zenodo.10711575)
