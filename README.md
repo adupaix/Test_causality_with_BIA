@@ -1,19 +1,10 @@
 # Physiological condition as a cause or consequence of behavior, a chicken-and-egg story
 
-<<<<<<< HEAD
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
-[![DOI](https://zenodo.org/badge/710848069.svg)](https://zenodo.org/doi/10.5281/zenodo.10711575)
-[![Latest Release](https://img.shields.io/github/release/adupaix/Test_causality_with_BIA)](https://github.com/adupaix/Test_causality_with_BIA/releases)
 
-
-=======
 [![License](https://img.shields.io/github/license/adupaix/Test_causality_with_BIA)](https://github.com/adupaix/Test_causality_with_BIA/blob/master/LICENSE)
 [![DOI](https://zenodo.org/badge/710848069.svg)](https://zenodo.org/doi/10.5281/zenodo.10711575)
 [![Latest Release](https://img.shields.io/github/release/adupaix/Test_causality_with_BIA)](https://github.com/adupaix/Test_causality_with_BIA/releases)
-<<<<<<< HEAD
->>>>>>> develop
-=======
->>>>>>> develop
+
 ---
 
 Scripts used to generate the results and figures of the following paper:
@@ -33,6 +24,8 @@ To run the analysis:
 - run `launch.R`
 
 ## Datasets
+
+The files containing the ratio between DFADs and NLOGs and that containing BIA data are provided as csv files in the `Outputs` directory.
 
 The Bio-electrical Impedance Analysis (BIA) data, collected by observers onboard French purse seine vessels, as part of the [MANFAD](https://manfad-project.com/en/) project. It can be obtained through a datacall to the [Ob7 - Observatoire des Écosystèmes Pélagiques Tropicaux exploités](https://www.ob7.ird.fr/en/pages/datacall.html). The csv file is read in `BIA_FILE`.
 
