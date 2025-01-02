@@ -21,6 +21,11 @@ build.and.compare.models <- function(my_data, dir = "yft",
   my_lm <- lm(phase_angle_deg ~ NFob + chla + Length + quarter, data = my_data)
   comp_lm <- build.model(my_data, which.model = "lm",
                          return.comparison.metrics = T)
+  plot_lm <- build.model(my_data, which.model = "lm",
+                         return.prediction.plot = T)
+  ggsave(file.path(output_path, dir, 'prediction_plot_lm.png'),
+         plot_lm,
+         width = 10, height = 10)
   
   png(filename = file.path(output_path, dir, "diagnostic_plots_lm.png"))
   par(mfrow = c(2,2))
@@ -31,11 +36,23 @@ build.and.compare.models <- function(my_data, dir = "yft",
   my_nlm1 <- build.model(my_data, which.model = "nlm1")
   comp_nlm1 <- build.model(my_data, which.model = "nlm1",
                          return.comparison.metrics = T)
+  plot_nlm1 <- build.model(my_data, which.model = "nlm1",
+                           return.prediction.plot = T)
+  ggsave(file.path(output_path, dir, 'prediction_plot_nlm1.png'),
+         plot_nlm1,
+         width = 10, height = 10)
   
   # NON-LINEAR MODEL 2
   my_nlm2 <- build.model(my_data, which.model = "nlm2")
   comp_nlm2 <- build.model(my_data, which.model = "nlm2",
                          return.comparison.metrics = T)
+  plot_nlm2 <- build.model(my_data, which.model = "nlm2",
+                           return.prediction.plot = T)
+  ggsave(file.path(output_path, dir, 'prediction_plot_nlm2.png'),
+         plot_nlm2,
+         width = 10, height = 10)
+  saveRDS(plot_nlm2,
+          file.path(output_path, dir, 'prediction_plot_nlm2.rds'))
   
   
   # summary of the results
@@ -102,7 +119,8 @@ build.and.compare.models <- function(my_data, dir = "yft",
 
 build.model <- function(my_data,
                         which.model = c("lm","nlm1","nlm2"),
-                        return.comparison.metrics = F){
+                        return.comparison.metrics = F,
+                        return.prediction.plot = F){
   if (which.model == "lm"){
     model <- lm(phase_angle_deg ~ NFob + chla + Length + quarter, data = my_data)
   } else if (which.model == "nlm1"){
@@ -137,9 +155,9 @@ build.model <- function(my_data,
                       q3 = my_data$quarter3, q4 = my_data$quarter4,
                       control = nls.lm.control(maxiter = 200))
   }
-  if (return.comparison.metrics == F){
+  if (return.comparison.metrics == F & return.prediction.plot == F){
     return(model)
-  } else {
+  } else if (return.comparison.metrics) {
     tss <- sum((my_data$phase_angle_deg - mean(my_data$phase_angle_deg))^2)
     
     if(which.model == "lm"){
@@ -181,5 +199,35 @@ build.model <- function(my_data,
     }
     
     return(c(r_squared, rmse, aic))
+  } else if (return.prediction.plot) {
+    my_x <- seq(10,
+                round(max(my_data$NFob))+10,
+                1)
+    if (which.model == 'lm') {
+      my_y <- predict(model, data.frame(NFob = my_x,
+                                        chla = median(my_data$chla),
+                                        Length = median(my_data$Length),
+                                        quarter = as.factor(1)))
+    } else if (which.model == 'nlm1'){
+      my_y <- getPred1(model$par,
+                       my_x,
+                       median(my_data$Length),
+                       median(my_data$chla),
+                       0, 0, 0)
+    } else if (which.model == 'nlm2'){
+      my_y <- getPred2(model$par,
+                       my_x,
+                       median(my_data$Length),
+                       median(my_data$chla),
+                       0, 0, 0)
+    }
+    p <- ggplot()+
+      geom_line(aes(x=my_x,
+                    y=my_y))+
+      ylab('Predicted phase angle (°)')+
+      scale_x_continuous('FOB density (number of FOBs per 2° cell)')+
+      theme(panel.background = element_rect(color = 'black', fill = 'white'),
+            panel.grid.major = element_line(linetype = 'dashed', color = 'grey'))
+    return(p)
   }
 }

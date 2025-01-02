@@ -170,6 +170,8 @@ ggplot(data_yft)+
 
 ggsave(file.path(OUTPUT_PATH, "boxplot_PA_vs_density_yft.png"),
        boxplot_yft, width = 6, height = 6)
+saveRDS(boxplot_yft,
+        file.path(OUTPUT_PATH, "boxplot_PA_vs_density_yft.rds"))
 
 # Spearman correlation tests
 sink(file.path(OUTPUT_PATH, "yft", "spearman.txt"))
@@ -209,3 +211,15 @@ build.and.compare.models(data_skj %>%
                            dplyr::filter(phase_angle_deg < 40),
                          dir = "skj_nooutliers",
                          output_path = OUTPUT_PATH)
+
+# Figure with boxplot and predictions from nlm2 for YFT
+plot_predict <- readRDS(file.path(OUTPUT_PATH, 'yft', 'prediction_plot_nlm2.rds'))
+fig <- ggarrange(boxplot_yft+
+                   scale_x_continuous(limits = c(10, round(max(data_yft$NFob))+10)),
+                 plot_predict+
+                   scale_y_continuous(limits = c(0,NA)),
+                 nrow = 2,
+                 labels = "AUTO")
+ggsave(file.path(OUTPUT_PATH, 'boxplot_and_predict_PA_vs_density_yft.png'),
+       fig,
+       width = 6, height = 9)
