@@ -200,26 +200,75 @@ sink()
 #      with whole datasets and removing outliers (with PA values above 40)
 build.and.compare.models(data_yft, dir = "yft",
                          output_path = OUTPUT_PATH)
+selecting.procedure.AIC(data_yft, dir = "yft",
+                        output_path = OUTPUT_PATH)
+
 build.and.compare.models(data_yft %>%
                            dplyr::filter(phase_angle_deg < 40),
                          dir = "yft_nooutliers",
                          output_path = OUTPUT_PATH)
+selecting.procedure.AIC(data_yft %>%
+                          dplyr::filter(phase_angle_deg < 40),
+                        dir = "yft_nooutliers",
+                        output_path = OUTPUT_PATH)
+
 
 build.and.compare.models(data_skj, dir = "skj",
                          output_path = OUTPUT_PATH)
+selecting.procedure.AIC(data_skj, dir = "skj",
+                        output_path = OUTPUT_PATH)
+
 build.and.compare.models(data_skj %>%
                            dplyr::filter(phase_angle_deg < 40),
                          dir = "skj_nooutliers",
                          output_path = OUTPUT_PATH)
+selecting.procedure.AIC(data_skj %>%
+                          dplyr::filter(phase_angle_deg < 40),
+                        dir = "skj_nooutliers",
+                        output_path = OUTPUT_PATH)
+
 
 # Figure with boxplot and predictions from nlm2 for YFT
+# also add panel with map
+models <- readRDS(file.path(OUTPUT_PATH, 'yft', 'models.rds'))
+model <- models$nlmyft2
+getPred <- function(parS, nfob, fl, chla, q2, q3, q4){
+  (nfob+parS$a)/(parS$b*nfob) + parS$d * fl + parS$e * chla +  parS$f2 * q2 + parS$f3 * q3 + parS$f4 * q4
+}
+my_x <- seq(10,
+            round(max(data_yft$NFob))+10,
+            1)
+my_y <- getPred(model$par,
+                 my_x,
+                 median(data_yft$Length),
+                 median(data_yft$chla),
+                 0, 0, 0)
+df_pred <- data.frame(my_x = my_x, my_y = my_y)
+
 plot_predict <- readRDS(file.path(OUTPUT_PATH, 'yft', 'prediction_plot_nlm2.rds'))
-fig <- ggarrange(boxplot_yft+
-                   scale_x_continuous(limits = c(10, round(max(data_yft$NFob))+10)),
-                 plot_predict+
-                   scale_y_continuous(limits = c(0,NA)),
-                 nrow = 2,
-                 labels = "AUTO")
+fig <-boxplot_yft+
+  geom_line(data = df_pred, aes(x = my_x, y = my_y),
+            color = 'grey20')
+
 ggsave(file.path(OUTPUT_PATH, 'boxplot_and_predict_PA_vs_density_yft.png'),
        fig,
+       width = 6, height = 6)
+
+world <- map_data('world')
+map <- ggplot(st_as_sf(data_yft,
+                coords = c('longitude_dec', 'latitude_dec'),
+                crs = st_crs(4326)))+
+  geom_sf(color = 'red')+
+  geom_polygon(data=world, aes(x=long, y=lat, group=group))+
+  ylab("Latitude")+xlab("Longitude")+
+  coord_sf(xlim = c(35, 80), ylim = c(-20, 15), expand = FALSE)+
+  theme(panel.background = element_rect(fill = "grey90", color = "black"),
+        panel.grid = element_blank())
+
+newfig <- ggarrange(map,fig,
+                    nrow = 2,
+                    labels = 'AUTO')
+
+ggsave(file.path(OUTPUT_PATH, 'boxplot_and_map.png'),
+       newfig,
        width = 6, height = 9)
