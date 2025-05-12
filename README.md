@@ -8,7 +8,7 @@
 
 Scripts used to generate the results and figures of the following paper:
 
-Dupaix A., Deneubourg J.-L., Forget F., Tolloti M., Dagorn L., Capello M. (*submitted*). Physiological condition as a cause or consequence of behavior, a chicken-and-egg story.
+ Dupaix A, Deneubourg J-L, Forget F, Tolotti MT, Dagorn L, Capello M. (2025) Mechanistic modelling reveals tuna physiological condition is not a driver of floating object association. _Proc. R. Soc. B_ 292: 20250704. [https://doi.org/10.1098/rspb.2025.0704](https://doi.org/10.1098/rspb.2025.0704)
 
 Should you have any question, please contact me: amael.dupaix@ens-lyon.fr
 
@@ -29,6 +29,7 @@ The files containing the number of FOBs and that containing BIA data are provide
 The Bio-electrical Impedance Analysis (BIA) data, collected by observers onboard French purse seine vessels, as part of the [MANFAD](https://manfad-project.com/en/) project. The csv file is in the `0-Data` folder and is read by the scripts in `BIA_FILE`.
 
 The following IOTC (Indian Ocean Tuna Commission) datasets are used to calculate the number of FOBs:
+
 - [Instrumented buoy data (Jan 2020 - June 2023)](https://iotc.org/documents/instrumented-buoy-data-january-2020-june-2023) (read in `IOTC_3BU_FILE`)
 - [Code list for CWP grids](https://iotc.org/WGFAD/03/Data/00-CWP) (codes for 1° cells used, read in `IOTC_CELLREF_FILE`)
 

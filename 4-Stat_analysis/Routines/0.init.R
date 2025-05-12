@@ -28,6 +28,7 @@ MAIN_merged_file <- file.path(OUTPUT_PATH,
                               "MAIN-merged_data_frame.csv")
 
 source(file.path(FUNC_PATH, "build_and_compare_models.R"))
+source(file.path(FUNC_PATH, "selecting_procedure_AIC.R"))
 
 #' Save a log file
 t <- format(Sys.time(), ("%Y-%m-%d_%H:%M:%S"))
