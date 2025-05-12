@@ -8,7 +8,7 @@
 
 Scripts used to generate the results and figures of the following paper:
 
-Dupaix A., Deneubourg J.-L., Forget F., Tolloti M., Dagorn L., Capello M. (*submitted*). Physiological condition as a cause or consequence of behavior, a chicken-and-egg story.
+ Dupaix A, Deneubourg J-L, Forget F, Tolotti MT, Dagorn L, Capello M. (2025) Mechanistic modelling reveals tuna physiological condition is not a driver of floating object association. _Proc. R. Soc. B_ 292: 20250704. [https://doi.org/10.1098/rspb.2025.0704](https://doi.org/10.1098/rspb.2025.0704)
 
 Should you have any question, please contact me: amael.dupaix@ens-lyon.fr
 
